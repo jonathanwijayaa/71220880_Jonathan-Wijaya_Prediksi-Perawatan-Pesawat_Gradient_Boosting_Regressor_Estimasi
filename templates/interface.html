@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Prediksi Perbaikan Pesawat</title>
+</head>
+<body>
+    <div class="airplaneAnimation">
+        <div class="plane">
+            <div class="main"></div>
+            <div class="wingOne"></div>
+            <div class="wingTwo"></div>
+            <div class="pollution"></div>
+        </div>
+        <div class="clouds">
+          <div class="cloudOne"></div>
+          <div class="cloudTwo"></div>
+          <div class="cloudThree"></div>
+    </div>
+    <h1>Prediksi Perbaikan Pesawat</h1>
+
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="file">Upload Data Referensi:</label>
+        <input type="file" id="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if rmse %}
+        <script>
+            document.querySelector('.plane').classList.add('center-right');
+        </script>
+        <div class="result-section">
+            
+            <h2>Model dilatih dengan RMSE: {{ rmse }}</h2>
+            <form action="/" method="post" class="dataPrediksi">
+                <h3>Masukkan Data Untuk Diprediksi Perawatannya:</h3>
+                <label for="cycle">Jumlah Siklus Penerbangan:</label>
+                <input type="number" step="any" id="cycle" name="cycle" required>
+
+                <label for="setting1">Pengaturan Mesin 1 (setting1):</label>
+                <input type="number" step="any" id="setting1" name="setting1" required>
+
+                <label for="setting2">Pengaturan Mesin 2 (setting2):</label>
+                <input type="number" step="any" id="setting2" name="setting2" required>
+
+                <label for="setting3">Pengaturan Mesin 3 (setting3):</label>
+                <input type="number" step="any" id="setting3" name="setting3" required>
+
+                {% for i in range(1, 22) %}
+                    <div class="sensor-row">
+                        <label for="s{{ i }}">Pengukuran Sensor {{ i }} (s{{ i }}):</label>
+                        <input type="number" step="any" id="s{{ i }}" name="s{{ i }}" required>
+
+                        <label for="av{{ i }}">Rata-Rata Pengukuran s{{ i }} (av{{ i }}):</label>
+                        <input type="number" step="any" id="av{{ i }}" name="av{{ i }}">
+
+                        <label for="sd{{ i }}">Standar Deviasi Pengukuran s{{ i }} (sd{{ i }}):</label>
+                        <input type="number" step="any" id="sd{{ i }}" name="sd{{ i }}">
+                    </div>
+                {% endfor %}
+
+                <button type="submit">Prediksi</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if result %}
+        <div class="result-section">
+            <h2>Hasil Prediksi:</h2>
+            <p>{{ result }}</p>
+        </div>
+    {% endif %}
+    
+</body>
+</html>
